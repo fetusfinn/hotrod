@@ -31,6 +31,10 @@ struct dll_t
     // the last time our dll was updated
     std::filesystem::file_time_type m_last_update;
 
+    //
+    // functions
+    //
+
     dll_t(const std::string& _path = "")
     {
 	    load(_path);
@@ -44,7 +48,7 @@ struct dll_t
     }
 
     //
-    // loads a dll int memory from the given path
+    // loads a dll into memory from the given path
     //
     bool load(const std::string& _path)
     {
@@ -105,8 +109,6 @@ struct dll_t
         FreeLibrary(m_handle);
 
         m_handle = nullptr;
-
-        m_path.clear();
     }
 
     //
