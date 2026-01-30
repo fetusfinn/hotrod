@@ -8,4 +8,4 @@
 .settings/
 
 # shadow copied dlls
-imgui/current/
+**/current/**.dll
