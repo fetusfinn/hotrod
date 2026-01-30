@@ -1,8 +1,11 @@
-# Build and Release Folders
+# build and release folders
 **/x64/
 **/Debug/
 **/Release/
 
-# Other files and folders
+# other files and folders
 .vs/
 .settings/
+
+# shadow copied dlls
+hotrod/current/

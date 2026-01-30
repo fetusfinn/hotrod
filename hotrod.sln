@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hotrod", "hotrod\hotrod.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rod", "rod\rod.vcxproj", "{CFFE1060-B09C-4BCD-B872-086B8547E8B1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shared", "shared\shared.vcxitems", "{03A94931-6225-483D-AAF7-1D687F0D48FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -37,5 +39,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5481E552-4386-4B4B-A3CB-7861EE030AAF}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		shared\shared.vcxitems*{03a94931-6225-483d-aaf7-1d687f0d48fd}*SharedItemsImports = 9
+		shared\shared.vcxitems*{cffe1060-b09c-4bcd-b872-086b8547e8b1}*SharedItemsImports = 4
+		shared\shared.vcxitems*{e651e780-9434-4064-bf03-4ae77da1f8b3}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal
