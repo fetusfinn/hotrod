@@ -4,14 +4,23 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 
 #include "macros.h"
 
 //
-// subsystem contexts
+// required defs
 //
 
+// forward decl
 struct module_context_t;
+
+// render function sig alias, had to move here, kept getting errors
+using imrenderfn_t = std::function<void()>;
+
+//
+// subsystem contexts
+//
 
 //
 // test subsystem context
@@ -20,6 +29,19 @@ struct sub_test_ctx_t
 {
 	void (*dump)(module_context_t*);
 	void (*print)(const std::string&);
+};
+
+//
+// imgui subsystem context definition (must match engine's definition)
+//
+struct sub_imgui_ctx_t
+{
+	void (*register_fn)(const imrenderfn_t&);
+	void (*clear_fns)();
+
+	// the main app's imgui context - modules MUST call ImGui::SetCurrentContext(ctx)
+	// before using any ImGui functions, as DLLs have their own static GImGui pointer
+	void* ctx;
 };
 
 //
@@ -55,9 +77,9 @@ struct engine_context_t
 //
 #ifndef HOT_MOD
 
-// our engine context, to be sent to our modules, putting here to make it global for now
-// todo : move elsewhere, just here for now
-extern engine_context_t g_engine;
+	// our engine context, to be sent to our modules, putting here to make it global for now
+	// todo : move elsewhere, just here for now
+	extern engine_context_t g_engine;
 
 #endif
 
@@ -150,8 +172,8 @@ struct module_context_t
 	{
 		if (CTX_RELOAD_FN)
 			CTX_RELOAD_FN();
-		else
-			DO_ONCE(printerror(std::format("no {} for '{}'", TO_STRING(CTX_RELOAD_FN), name)));
+		//else
+			//DO_ONCE(printerror(std::format("no {} for '{}'", TO_STRING(CTX_RELOAD_FN), name)));
 	}
 
 	//
@@ -166,7 +188,7 @@ struct module_context_t
 
 		if (desc)						printdebug("  desc    : " << desc);
 		if (author)						printdebug("  author  : " << author);
-		if (major > 0 || minor > 0)		printdebug("  version : " << major << "." << minor);
+		if (major > 0 || minor > 0)		printdebug("  version : " << (int)major << "." << (int)minor);
 	}
 
 #endif

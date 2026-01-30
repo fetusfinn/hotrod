@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcopy:*)",
+      "Bash(Remove-Item -Path \"D:\\\\source\\\\repos\\\\hotrod-imgui\\\\imgui\\\\macros.h\" -Force)",
+      "Bash(Remove-Item -Path \"D:\\\\source\\\\repos\\\\hotrod-imgui\\\\imgui\\\\print.h\" -Force)",
+      "Bash(del /f \"D:\\\\source\\\\repos\\\\hotrod-imgui\\\\imgui\\\\macros.h\")",
+      "Bash(del /f \"D:\\\\source\\\\repos\\\\hotrod-imgui\\\\imgui\\\\print.h\")"
+    ]
+  }
+}

@@ -48,6 +48,9 @@ struct dll_t
     // the last time our dll was updated
     std::filesystem::file_time_type m_last_update;
 
+    // whether this dll was manually unloaded (prevents auto-reload until file changes)
+    bool m_manually_unloaded = false;
+
     // our modules context
     module_context_t m_ctx = {};
 
@@ -64,12 +67,12 @@ struct dll_t
     //
 	~dll_t()
     {
-	    unload();
+	    unload(false); // destructor is not a manual unload
     }
 
-    // 
+    //
     // returns true if the current module is loaded
-    // 
+    //
     bool loaded() const
     {
         return m_ctx.loaded && m_handle;
@@ -171,8 +174,19 @@ struct dll_t
         // printdebug("update time : " << update_time);
         // printdebug("last update : " << m_last_update);
 
+        // check if the file has been modified
+        bool file_changed = (update_time != m_last_update);
+
+        // if manually unloaded, only allow reload if the file was updated
+        if (m_manually_unloaded && !file_changed && !_init)
+            return nullptr;
+
+        // clear the manually unloaded flag if file changed (allow reload)
+        if (file_changed)
+            m_manually_unloaded = false;
+
         // has it changed ? or is this the initialising call
-        if (update_time != m_last_update || _init == true)
+        if (file_changed || _init == true)
         {
             // if so, then reload our dll
 
@@ -180,7 +194,7 @@ struct dll_t
 				printdebug("reloading...");
 
             // unload
-            unload();
+            unload(false); // internal unload, not manual
 
             // load our module into memory
             load(m_path, update_time);
@@ -198,8 +212,9 @@ struct dll_t
 
     //
     // unloads our dll
+    // _manual: if true, marks as manually unloaded (prevents auto-reload until file changes)
     //
-    void unload()
+    void unload(bool _manual = true)
     {
         if (!m_handle)
             return;
@@ -227,9 +242,19 @@ struct dll_t
         // we're watching and dont want to lose it
         m_copy_path.clear();
 
-        // clear our context and last update time
-        m_ctx           = {};
-        m_last_update   = {};
+        // clear our context
+        m_ctx = {};
+
+        // if manually unloaded, set flag and preserve last_update for file change detection
+        if (_manual)
+        {
+            m_manually_unloaded = true;
+            // keep m_last_update so we can detect when file changes
+        }
+        else
+        {
+            m_last_update = {};
+        }
     }
 
     //
@@ -251,7 +276,7 @@ struct dll_t
     }
 
     //
-    // finds the module load function and returns it 
+    // finds the module load function and returns it
     //
     std::optional<module_load_fn_t> find_load_fn() const
     {
@@ -297,6 +322,12 @@ struct dll_t
             m_ctx.on_load(&g_engine);
         }
     }
+
+    // updates our dll
+    void tick() { m_ctx.on_update(); }
+
+    // prints the modules info
+    void dump() const { m_ctx.print_info(); }
 
     //
     // so that we can easily check if this instance has been loaded

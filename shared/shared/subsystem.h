@@ -19,6 +19,9 @@ enum subsystem_type_t : int
 	// todo, just for testing
 	SUB_THREAD_POOL,
 	SUB_DISPATCHER,
+
+	// imgui subsystem
+	SUB_IMGUI,
 };
 
 //
@@ -31,6 +34,7 @@ inline const char* to_string(subsystem_type_t _type)
 	case SUB_TEST:			return "SUB_TEST";
 	case SUB_THREAD_POOL:	return "SUB_THREAD_POOL";
 	case SUB_DISPATCHER:	return "SUB_DISPATCHER";
+	case SUB_IMGUI:			return "SUB_IMGUI";
 	default:				return "unknown";
 	}
 }
@@ -139,7 +143,7 @@ public:
 	}
 
 
-	
+
 	// make this class a singleton
 	MAKE_SINGLETON(subsystem_manager_t);
 
